@@ -44,6 +44,7 @@ The public deployment should run the container on localhost only and expose it t
 - Injects vendored Ruffle so recovered SWF embeds can run in modern browsers without an external dependency.
 - Keeps the replay launcher at `/`; the recovered official root capture is available at `/__official-root`.
 - Tracks missing or generated fallback responses at `/__missing` and `/__missing.json`.
+- Publishes the live branch, commit, recovery counts, community links, and support links in the launcher and at `/__project-status.json`.
 - Persists local accounts and sessions in `app/data/accounts.json`.
 - Supports signup, login, logout, citizen homes, Millsbucks, recovered shop purchases, inventory, banking, buddies, and page shortcuts.
 - Indexes recovered shop captures into a catalog instead of hardcoding individual products.
@@ -101,6 +102,21 @@ npm run crawl
 ```
 
 The crawler requests representative recovered routes and local references, then records missing items through `/__missing` so the remaining gaps stay visible.
+
+## Release Information
+
+The launcher identifies the exact source version running on the public demo. In a Git checkout, the app reads the current branch and commit automatically. Packaged deployments should provide these environment variables:
+
+```text
+PROJECT_BRANCH=main
+PROJECT_COMMIT=<full Git commit SHA>
+PROJECT_STATUS=Active restoration
+PROJECT_DEPLOYED_AT=<ISO 8601 timestamp>
+```
+
+[`release.env.example`](release.env.example) can be copied to `release.env` by a deployment process, and Docker Compose passes these values into the replay container when they are present.
+
+The same information is available as JSON at `/__project-status.json`. This makes it possible for contributors to confirm whether the public demo matches the branch and commit they are testing.
 
 ## Current Verified State
 

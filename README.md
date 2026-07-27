@@ -28,6 +28,8 @@ The project is still incomplete, but the public replay is available at [millsber
 
 The replay is usable, but there are still missing pages, assets, and interactions. I keep the current recovery status in [`app/STATUS.md`](app/STATUS.md) and [`app/ARCADE_RECOVERY.md`](app/ARCADE_RECOVERY.md).
 
+The public launcher also displays its deployed Git branch, exact commit, current recovery counts, community links, and support options. The same deployment information is available from [`/__project-status.json`](https://millsberry.markshaw.ca/__project-status.json).
+
 ## Contributing
 
 I welcome pull requests that recover missing material, verify archived sources, improve route reconstruction, fix replay problems, or clarify the documentation.

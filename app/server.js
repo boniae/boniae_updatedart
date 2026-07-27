@@ -1,6 +1,7 @@
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
+const { execFileSync } = require("child_process");
 const { URL } = require("url");
 const { AccountStore, expiredSessionCookie, sessionCookie } = require("./auth");
 
@@ -16,8 +17,29 @@ const MISSING_LOG_PATH = process.env.MISSING_LOG_PATH || path.join(APP_ROOT, "ou
 const RUFFLE_URL = process.env.RUFFLE_URL === "0" ? "" : (process.env.RUFFLE_URL || "/__ruffle/ruffle.js");
 const TEST_USERNAME = process.env.TEST_USERNAME || "testcitizen";
 const TEST_PASSWORD = process.env.TEST_PASSWORD || "millsberry";
+const PROJECT_REPOSITORY_URL = "https://github.com/gitupofftheflooranddosomework/millsberry.com";
+const PROJECT_BRANCH = cleanReleaseValue(process.env.PROJECT_BRANCH) || readGitValue(["rev-parse", "--abbrev-ref", "HEAD"]) || "main";
+const PROJECT_COMMIT = cleanReleaseValue(process.env.PROJECT_COMMIT) || readGitValue(["rev-parse", "HEAD"]);
+const PROJECT_STATUS = cleanReleaseValue(process.env.PROJECT_STATUS) || "Active restoration";
+const PROJECT_DEPLOYED_AT = cleanReleaseValue(process.env.PROJECT_DEPLOYED_AT);
 const accounts = new AccountStore(ACCOUNT_STORE_PATH);
 accounts.seedTestAccount(TEST_USERNAME, TEST_PASSWORD);
+
+function cleanReleaseValue(value) {
+  return String(value || "").trim().slice(0, 160);
+}
+
+function readGitValue(args) {
+  try {
+    return cleanReleaseValue(execFileSync("git", args, {
+      cwd: APP_ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }));
+  } catch {
+    return "";
+  }
+}
 
 const OFFICIAL_HOSTS = new Set([
   "www.millsberry.com",
@@ -1408,6 +1430,7 @@ function renderIndex(user, activeView = "routes") {
       <span class="pill">${recoveredSwfs.length} recovered SWFs</span>
       <span class="pill">${user ? `Signed in: ${escapeHtml(user.username)}` : "Guest session"}</span>
     </div>
+    ${renderProjectBulletin()}
     <div class="grid">
       <section class="panel">
         <h2>Start Here</h2>
@@ -2663,6 +2686,92 @@ ${buddies.map((buddy) => `  <buddy userName="${escapeXml(buddy)}" profile="/home
 </buddyList>`;
 }
 
+function projectReleaseInfo() {
+  const branchPath = PROJECT_BRANCH.split("/").map(encodeURIComponent).join("/");
+  const validCommit = /^[0-9a-f]{7,40}$/i.test(PROJECT_COMMIT);
+  return {
+    project: "Millsberry Reborn",
+    status: PROJECT_STATUS,
+    branch: PROJECT_BRANCH,
+    commit: PROJECT_COMMIT,
+    shortCommit: validCommit ? PROJECT_COMMIT.slice(0, 12) : "local development",
+    deployedAt: PROJECT_DEPLOYED_AT,
+    repositoryUrl: PROJECT_REPOSITORY_URL,
+    branchUrl: `${PROJECT_REPOSITORY_URL}/tree/${branchPath}`,
+    commitUrl: validCommit ? `${PROJECT_REPOSITORY_URL}/commit/${PROJECT_COMMIT}` : PROJECT_REPOSITORY_URL,
+    discordUrl: "https://discord.gg/p8H9Dtajgz",
+    koFiUrl: "https://ko-fi.com/markshaw97",
+    patreonUrl: "https://www.patreon.com/cw/MarkShaw97",
+    recovery: {
+      exactRoutes: routeIndex.size,
+      hostAssets: assetIndex.size,
+      recoveredPages: pagesByDigest.size,
+      recoveredSwfs: recoveredSwfEntries().length,
+      missingRequestsSinceStart: missingRequests.size
+    }
+  };
+}
+
+function externalProjectLink(href, label, className = "") {
+  return `<a${className ? ` class="${className}"` : ""} href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+}
+
+function renderProjectBulletin() {
+  const release = projectReleaseInfo();
+  const deployed = release.deployedAt
+    ? `<span>Published ${escapeHtml(release.deployedAt)}</span>`
+    : "<span>Build time not recorded</span>";
+  return `
+    <aside class="project-bulletin" aria-labelledby="project-bulletin-title">
+      <div class="bulletin-heading">
+        <div>
+          <p class="bulletin-kicker">Millsberry Town Hall</p>
+          <h2 id="project-bulletin-title">Project Bulletin</h2>
+        </div>
+        <span class="restoration-stamp">${escapeHtml(release.status)}</span>
+      </div>
+      <div class="bulletin-body">
+        <section class="bulletin-release" aria-labelledby="live-build-title">
+          <p class="bulletin-label" id="live-build-title">Live build</p>
+          <p class="bulletin-build">
+            ${externalProjectLink(release.branchUrl, release.branch, "branch-marker")}
+            <span aria-hidden="true">at</span>
+            ${externalProjectLink(release.commitUrl, release.shortCommit, "commit-marker")}
+          </p>
+          <p class="bulletin-fine-print">${deployed} · This identifies the code currently running on the public replay.</p>
+          <dl class="recovery-ledger">
+            <div><dt>Routes</dt><dd>${release.recovery.exactRoutes.toLocaleString("en-US")}</dd></div>
+            <div><dt>Assets</dt><dd>${release.recovery.hostAssets.toLocaleString("en-US")}</dd></div>
+            <div><dt>Pages</dt><dd>${release.recovery.recoveredPages.toLocaleString("en-US")}</dd></div>
+            <div><dt>SWFs</dt><dd>${release.recovery.recoveredSwfs.toLocaleString("en-US")}</dd></div>
+          </dl>
+        </section>
+        <section class="bulletin-links" aria-labelledby="follow-project-title">
+          <p class="bulletin-label" id="follow-project-title">Follow the restoration</p>
+          <div class="bulletin-actions">
+            ${externalProjectLink(release.repositoryUrl, "GitHub repository")}
+            ${externalProjectLink(release.discordUrl, "Join the Discord")}
+          </div>
+          <p class="bulletin-label support-label">Help keep it online</p>
+          <p class="bulletin-copy">Support helps cover hosting, archival storage, testing, and continued recovery work.</p>
+          <div class="bulletin-actions support-actions">
+            ${externalProjectLink(release.koFiUrl, "Support on Ko-fi")}
+            ${externalProjectLink(release.patreonUrl, "Join on Patreon")}
+          </div>
+        </section>
+      </div>
+    </aside>`;
+}
+
+function renderProjectFooter() {
+  const release = projectReleaseInfo();
+  return `
+    <footer class="project-footer">
+      <span><b>${escapeHtml(release.status)}</b> · Live branch ${externalProjectLink(release.branchUrl, release.branch)} · ${externalProjectLink(release.commitUrl, release.shortCommit)}</span>
+      <span>${externalProjectLink(release.repositoryUrl, "GitHub")} · ${externalProjectLink(release.discordUrl, "Discord")} · ${externalProjectLink(release.koFiUrl, "Ko-fi")} · ${externalProjectLink(release.patreonUrl, "Patreon")}</span>
+    </footer>`;
+}
+
 function renderAppPage(title, content, user, message = "", error = "") {
   return `<!doctype html>
 <html>
@@ -2685,6 +2794,7 @@ function renderAppPage(title, content, user, message = "", error = "") {
       ${error ? `<p class="error-message">${escapeHtml(error)}</p>` : ""}
       ${content}
     </section>
+    ${renderProjectFooter()}
   </main>
 </body>
 </html>`;
@@ -3304,6 +3414,10 @@ async function handleRequest(req, res) {
 
   if (url.pathname === "/__missing") {
     return sendText(res, 200, renderMissingReport());
+  }
+
+  if (url.pathname === "/__project-status.json") {
+    return sendText(res, 200, JSON.stringify(projectReleaseInfo(), null, 2), "application/json; charset=utf-8");
   }
 
   if (url.pathname === "/__missing.json") {

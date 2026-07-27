@@ -20,3 +20,7 @@ services:
       MISSING_LOG_PATH: /app/output/missing-requests.jsonl
       RUFFLE_URL: /__ruffle/ruffle.js
       PORT: 3000
+      PROJECT_BRANCH: ${PROJECT_BRANCH:-main}
+      PROJECT_COMMIT: ${PROJECT_COMMIT:-}
+      PROJECT_STATUS: ${PROJECT_STATUS:-Active restoration}
+      PROJECT_DEPLOYED_AT: ${PROJECT_DEPLOYED_AT:-}
