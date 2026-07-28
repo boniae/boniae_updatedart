@@ -19,7 +19,7 @@
 | --- | --- | --- | --- |
 | 12 | Solver | `g12_v9.swf` | Binary recovered; authentic dictionary recovered; startup still stalls in Ruffle |
 | 18 | Peanut Butter Toast Crunch Swirl | `g18_v11.swf` | Gameplay browser-verified |
-| 300 | Lucky Charms: Charmed Life | `neopets_g737_v12_44097.swf` | Authentic Neopets distribution recovered; runtime verification pending |
+| 300 | Lucky Charms: Charmed Life | `neopets_g737_v12_44097.swf` plus `luckycharms_charmedlife/` | Authentic Neopets distribution and map set recovered; runtime verification pending |
 | 340 | Wave Blaster | `g340_v9.swf` | Binary recovered; startup timeline still stalls in Ruffle |
 | 400 | Black Belt Karate | `g400_v14.swf` | Title screen browser-verified |
 | 505 | Horton Hears a Who: Water Water Everywhere | `pji_horton.swf` plus `main_waterwater.swf`, sound, language, font, and configuration assets | Authentic distributor package recovered; gameplay browser-verified |
@@ -41,6 +41,11 @@ are confirmed:
 | File | SHA-256 |
 | --- | --- |
 | `neopets_g737_v12_44097.swf` | `618019BA8AF913825A4CE11830929C21F1B3D1990DE6C57984C84696BB3CCAE3` |
+| `luckycharms_charmedlife/map1_v3.txt` | `6737B18B2B289FC49044B535DC5DD0560A3657E3D080BCF4234F570EB7C133DD` |
+| `luckycharms_charmedlife/map2_v1.txt` | `25FC4EEC7E5EF9C48E3367ED4623C5B23227B2B67C0189A7C5159DDCF9B7FC9C` |
+| `luckycharms_charmedlife/map3_v1.txt` | `8493EC791C253430376355FE61BBDC111AB338CAAA405CD15963C1FE6F9E7E84` |
+| `luckycharms_charmedlife/map4_v1.txt` | `6EC6B32247CA83045A5462583BFDE036B8AD70E590FB3C057C12A83672A89186` |
+| `luckycharms_charmedlife/map5_v2.txt` | `E43B3C3A32CB742735970020DF890D2DD0674BBF084E775B91D332326FA9E59E` |
 | `pji_horton.swf` | `37FFF804F9CFD43F6DBBC9C9FEEE5B62F6593E0C8019B4A3AD56D2D829198C28` |
 | `main_waterwater.swf` | `2A58D9893337813DCE9D2EC3716DF6EBED14B791318047EE95FF244E55009B04` |
 | `sounds_waterwater.swf` | `6E677A46567221351719221BF89BE549A5DD1C09EF0623AD788062107607D798` |
