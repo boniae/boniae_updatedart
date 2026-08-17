@@ -20,7 +20,7 @@ Open `http://localhost:3000`.
 Public demo URL:
 
 ```text
-https://millsberry.markshaw.ca
+https://millsberryreborn.com
 ```
 
 The container seeds a local demo account for convenience:
@@ -32,7 +32,7 @@ Password: millsberry
 
 If you want to point at a different Ruffle build, set `RUFFLE_URL` in the environment. Set `RUFFLE_URL=0` to disable injection entirely.
 
-The public deployment should run the container on localhost only and expose it through the `millsberry.markshaw.ca` Apache vhost, so the backend is not directly reachable from the public network.
+The public deployment should run the container on localhost only and expose it through the `millsberryreborn.com` Apache vhost, so the backend is not directly reachable from the public network.
 
 ## What It Does
 

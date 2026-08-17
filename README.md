@@ -2,11 +2,11 @@
 
 I'm rebuilding as much of Millsberry as I can from preserved pages, recovered assets, and archived references. This repository contains the replay server, the material recovered so far, and my working notes from the restoration.
 
-The project is still incomplete, but the public replay is available at [millsberry.markshaw.ca](https://millsberry.markshaw.ca/).
+The project is still incomplete, but the public replay is available at [millsberryreborn.com](https://millsberryreborn.com/).
 
 ## Project Links
 
-- [Official website and public replay](https://millsberry.markshaw.ca/)
+- [Official website and public replay](https://millsberryreborn.com/)
 - [Millsberry Reborn Discord](https://discord.gg/p8H9Dtajgz)
 - [Ko-fi](https://ko-fi.com/markshaw97)
 - [Patreon](https://www.patreon.com/cw/MarkShaw97)
@@ -21,14 +21,14 @@ The project is still incomplete, but the public replay is available at [millsber
 
 ## Trying the Replay
 
-- URL: [https://millsberry.markshaw.ca/](https://millsberry.markshaw.ca/)
+- URL: [https://millsberryreborn.com/](https://millsberryreborn.com/)
 - Demo login: `testcitizen` / `millsberry`
 
 ## Status
 
 The replay is usable, but there are still missing pages, assets, and interactions. I keep the current recovery status in [`app/STATUS.md`](app/STATUS.md) and [`app/ARCADE_RECOVERY.md`](app/ARCADE_RECOVERY.md).
 
-The public launcher also displays its deployed Git branch, exact commit, current recovery counts, community links, and support options. The same deployment information is available from [`/__project-status.json`](https://millsberry.markshaw.ca/__project-status.json).
+The public launcher also displays its deployed Git branch, exact commit, current recovery counts, community links, and support options. The same deployment information is available from [`/__project-status.json`](https://millsberryreborn.com/__project-status.json).
 
 ## Contributing
 
@@ -47,7 +47,7 @@ The recovered material stays available to the public. Support does not purchase 
 
 ## Gallery
 
-These previews were extracted from the first frames of recovered SWF files. The live site has a [searchable gallery with 669 images](https://millsberry.markshaw.ca/swf-teasers).
+These previews were extracted from the first frames of recovered SWF files. The live site has a [searchable gallery with 669 images](https://millsberryreborn.com/swf-teasers).
 
 <table>
 <tr>
