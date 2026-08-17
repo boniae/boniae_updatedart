@@ -1163,13 +1163,39 @@ function sendFile(res, filePath, overrideType) {
   fs.createReadStream(filePath).pipe(res);
 }
 
+const GOOGLE_TAG_ID = "G-3PR8WDDZPY";
+const GOOGLE_TAG_SNIPPET = `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '${GOOGLE_TAG_ID}');
+</script>`;
+
+function injectGoogleTag(body) {
+  if (typeof body !== "string" || body.includes(GOOGLE_TAG_ID)) return body;
+
+  const headMatch = body.match(/<head(?:\s[^>]*)?>/i);
+  if (!headMatch || headMatch.index === undefined) {
+    return `${GOOGLE_TAG_SNIPPET}\n${body}`;
+  }
+
+  const insertionPoint = headMatch.index + headMatch[0].length;
+  return `${body.slice(0, insertionPoint)}\n${GOOGLE_TAG_SNIPPET}${body.slice(insertionPoint)}`;
+}
+
 function sendText(res, status, body, type = "text/html; charset=utf-8", extraHeaders = {}) {
+  const responseBody = type.toLowerCase().startsWith("text/html")
+    ? injectGoogleTag(body)
+    : body;
   res.writeHead(status, {
     "Content-Type": type,
     "Cache-Control": "no-store",
     ...extraHeaders
   });
-  res.end(body);
+  res.end(responseBody);
 }
 
 function sendRedirect(res, location, extraHeaders = {}) {
